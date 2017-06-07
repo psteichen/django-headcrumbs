@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import headcrumbs as hc
-from headcrumbs import CrumbedView
+from django.utils.deprecation import MiddlewareMixin
 
+from .views import is_crumbed, CrumbedView
 
-class CrumbsMiddleware(object):
+class CrumbsMiddleware(MiddlewareMixin):
   def process_view(self, request, view_func, view_args, view_kwargs):
-    self._view = CrumbedView(view_func, request.path, view_args, view_kwargs) if hc.is_crumbed(view_func) else None
+    self._view = CrumbedView(view_func, request.path, view_args, view_kwargs) if is_crumbed(view_func) else None
 
   def process_template_response(self, request, response):
     if self._view is None:
